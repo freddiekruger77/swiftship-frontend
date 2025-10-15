@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Typography,
@@ -16,6 +16,7 @@ import {
 } from '@mui/material';
 import { ArrowBack as BackIcon, Edit as EditIcon } from '@mui/icons-material';
 import { useNavigate, useParams } from 'react-router-dom';
+import api from '../utils/api';
 
 interface PackageDetails {
   id: string;
@@ -39,39 +40,26 @@ interface PackageDetails {
 const PackageDetails: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
+  const [packageDetails, setPackageDetails] = useState<PackageDetails | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
-  // Mock data - in a real app this would come from an API
-  const packageDetails: PackageDetails = {
-    id: id || '1',
-    trackingNumber: 'SS123456789',
-    status: 'in-transit',
-    origin: 'New York, NY',
-    destination: 'Los Angeles, CA',
-    weight: 2.5,
-    dimensions: '10x8x6 inches',
-    value: 150.00,
-    createdAt: '2024-01-15',
-    updatedAt: '2024-01-16',
-    trackingHistory: [
-      {
-        date: '2024-01-15 10:00 AM',
-        status: 'Package Created',
-        location: 'New York, NY',
-        description: 'Package has been created and is ready for pickup',
-      },
-      {
-        date: '2024-01-15 2:00 PM',
-        status: 'Picked Up',
-        location: 'New York, NY',
-        description: 'Package has been picked up by courier',
-      },
-      {
-        date: '2024-01-16 8:00 AM',
-        status: 'In Transit',
-        location: 'Chicago, IL',
-        description: 'Package is in transit to destination',
-      },
-    ],
+  useEffect(() => {
+    if (id) {
+      fetchPackageDetails();
+    }
+  }, [id]);
+
+  const fetchPackageDetails = async () => {
+    try {
+      const response = await api.get(`/packages/${id}`);
+      setPackageDetails(response.data);
+    } catch (error: any) {
+      console.error('Failed to fetch package details:', error);
+      setError('Failed to load package details');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const getStatusColor = (status: string) => {
@@ -88,6 +76,33 @@ const PackageDetails: React.FC = () => {
         return 'default';
     }
   };
+
+  if (loading) {
+    return (
+      <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+        <Box display="flex" justifyContent="center" alignItems="center" minHeight="400px">
+          <Typography>Loading package details...</Typography>
+        </Box>
+      </Container>
+    );
+  }
+
+  if (error || !packageDetails) {
+    return (
+      <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+        <Box display="flex" alignItems="center" mb={3}>
+          <Button
+            startIcon={<BackIcon />}
+            onClick={() => navigate('/packages')}
+            sx={{ mr: 2 }}
+          >
+            Back to Packages
+          </Button>
+        </Box>
+        <Typography color="error">{error || 'Package not found'}</Typography>
+      </Container>
+    );
+  }
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>

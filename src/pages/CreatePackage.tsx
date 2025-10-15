@@ -12,6 +12,7 @@ import {
 } from '@mui/material';
 import { ArrowBack as BackIcon, Save as SaveIcon } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
+import api from '../utils/api';
 
 const CreatePackage: React.FC = () => {
   const navigate = useNavigate();
@@ -26,6 +27,7 @@ const CreatePackage: React.FC = () => {
   });
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [success, setSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -56,15 +58,22 @@ const CreatePackage: React.FC = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (validateForm()) {
-      // In a real app, this would make an API call
-      console.log('Creating package:', formData);
-      setSuccess(true);
-      setTimeout(() => {
-        navigate('/packages');
-      }, 2000);
+      setLoading(true);
+      try {
+        await api.post('/packages', formData);
+        setSuccess(true);
+        setTimeout(() => {
+          navigate('/packages');
+        }, 2000);
+      } catch (error: any) {
+        console.error('Failed to create package:', error);
+        setErrors({ submit: error.response?.data?.error || 'Failed to create package' });
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
@@ -178,6 +187,11 @@ const CreatePackage: React.FC = () => {
                 placeholder="Additional package details..."
               />
             </Grid>
+            {errors.submit && (
+              <Grid item xs={12}>
+                <Alert severity="error">{errors.submit}</Alert>
+              </Grid>
+            )}
             <Grid item xs={12}>
               <Box display="flex" gap={2}>
                 <Button
@@ -185,8 +199,9 @@ const CreatePackage: React.FC = () => {
                   variant="contained"
                   startIcon={<SaveIcon />}
                   size="large"
+                  disabled={loading}
                 >
-                  Create Package
+                  {loading ? 'Creating...' : 'Create Package'}
                 </Button>
                 <Button
                   variant="outlined"

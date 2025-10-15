@@ -39,12 +39,39 @@ cd swiftship-frontend
 npm install
 ```
 
-3. Start development server:
+3. Set up environment variables:
+```bash
+cp .env.example .env
+```
+
+Edit `.env` to configure your backend URL:
+```bash
+VITE_API_URL=https://swiftship-backend-c5iz.onrender.com
+```
+
+4. Start development server:
 ```bash
 npm run dev
 ```
 
-4. Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+5. Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+
+## Backend Integration
+
+The frontend is configured to connect to the SwiftShip backend API. Make sure your backend is running and accessible at the URL specified in your `.env` file.
+
+### API Endpoints Used
+
+The frontend expects the following backend endpoints:
+
+- `POST /auth/login` - User authentication
+- `POST /auth/logout` - User logout
+- `GET /auth/profile` - Get user profile
+- `GET /packages` - List all packages
+- `GET /packages/dashboard/stats` - Dashboard statistics
+- `GET /packages/:id` - Get package details
+- `POST /packages` - Create new package
+- `GET /tracking/track/:trackingNumber` - Track package by number
 
 ## Deployment to GitHub Pages
 
@@ -89,6 +116,8 @@ src/
 │   └── CreatePackage.tsx  # Create new package form
 ├── context/            # React context providers
 │   └── AuthContext.tsx # Authentication context
+├── utils/              # Utility functions
+│   └── api.ts          # API configuration and axios instance
 ├── App.tsx             # Main app component
 ├── main.tsx            # React app entry point
 └── index.css           # Global styles

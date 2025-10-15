@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Typography,
@@ -15,6 +15,7 @@ import {
 } from '@mui/material';
 import { Add as AddIcon, Visibility as ViewIcon } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
+import api from '../utils/api';
 
 interface Package {
   id: string;
@@ -27,26 +28,25 @@ interface Package {
 
 const Packages: React.FC = () => {
   const navigate = useNavigate();
+  const [packages, setPackages] = useState<Package[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
-  // Mock data - in a real app this would come from an API
-  const packages: Package[] = [
-    {
-      id: '1',
-      trackingNumber: 'SS123456789',
-      status: 'in-transit',
-      origin: 'New York, NY',
-      destination: 'Los Angeles, CA',
-      createdAt: '2024-01-15',
-    },
-    {
-      id: '2',
-      trackingNumber: 'SS987654321',
-      status: 'delivered',
-      origin: 'Chicago, IL',
-      destination: 'Miami, FL',
-      createdAt: '2024-01-10',
-    },
-  ];
+  useEffect(() => {
+    fetchPackages();
+  }, []);
+
+  const fetchPackages = async () => {
+    try {
+      const response = await api.get('/packages');
+      setPackages(response.data.packages || response.data);
+    } catch (error: any) {
+      console.error('Failed to fetch packages:', error);
+      setError('Failed to load packages');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -63,6 +63,16 @@ const Packages: React.FC = () => {
     }
   };
 
+  if (loading) {
+    return (
+      <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+        <Box display="flex" justifyContent="center" alignItems="center" minHeight="400px">
+          <Typography>Loading packages...</Typography>
+        </Box>
+      </Container>
+    );
+  }
+
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
@@ -78,6 +88,12 @@ const Packages: React.FC = () => {
         </Button>
       </Box>
 
+      {error && (
+        <Typography color="error" sx={{ mb: 2 }}>
+          {error}
+        </Typography>
+      )}
+
       <Paper>
         <TableContainer>
           <Table>
@@ -92,30 +108,40 @@ const Packages: React.FC = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {packages.map((pkg) => (
-                <TableRow key={pkg.id}>
-                  <TableCell>{pkg.trackingNumber}</TableCell>
-                  <TableCell>
-                    <Chip
-                      label={pkg.status.replace('-', ' ')}
-                      color={getStatusColor(pkg.status)}
-                      size="small"
-                    />
-                  </TableCell>
-                  <TableCell>{pkg.origin}</TableCell>
-                  <TableCell>{pkg.destination}</TableCell>
-                  <TableCell>{pkg.createdAt}</TableCell>
-                  <TableCell>
-                    <Button
-                      size="small"
-                      startIcon={<ViewIcon />}
-                      onClick={() => navigate(`/packages/${pkg.id}`)}
-                    >
-                      View
-                    </Button>
+              {packages.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={6} align="center">
+                    <Typography variant="body1" sx={{ py: 4 }}>
+                      No packages found
+                    </Typography>
                   </TableCell>
                 </TableRow>
-              ))}
+              ) : (
+                packages.map((pkg) => (
+                  <TableRow key={pkg.id}>
+                    <TableCell>{pkg.trackingNumber}</TableCell>
+                    <TableCell>
+                      <Chip
+                        label={pkg.status.replace('-', ' ')}
+                        color={getStatusColor(pkg.status)}
+                        size="small"
+                      />
+                    </TableCell>
+                    <TableCell>{pkg.origin}</TableCell>
+                    <TableCell>{pkg.destination}</TableCell>
+                    <TableCell>{pkg.createdAt}</TableCell>
+                    <TableCell>
+                      <Button
+                        size="small"
+                        startIcon={<ViewIcon />}
+                        onClick={() => navigate(`/packages/${pkg.id}`)}
+                      >
+                        View
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
             </TableBody>
           </Table>
         </TableContainer>

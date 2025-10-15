@@ -19,6 +19,7 @@ import {
   CheckCircle as CheckCircleIcon,
   Warning as WarningIcon,
 } from '@mui/icons-material';
+import api from '../utils/api';
 
 interface TrackingResult {
   trackingNumber: string;
@@ -51,40 +52,8 @@ const Tracking: React.FC = () => {
     setError('');
 
     try {
-      // Mock data for demo - in a real app this would call an API
-      if (trackingNumber.toUpperCase() === 'SS123456789') {
-        setPackageData({
-          trackingNumber: 'SS123456789',
-          status: 'in-transit',
-          origin: 'New York, NY',
-          destination: 'Los Angeles, CA',
-          currentLocation: 'Chicago, IL',
-          estimatedDelivery: '2024-01-20',
-          trackingHistory: [
-            {
-              date: '2024-01-15 10:00 AM',
-              status: 'Package Created',
-              location: 'New York, NY',
-              description: 'Package has been created and is ready for pickup'
-            },
-            {
-              date: '2024-01-15 2:00 PM',
-              status: 'Picked Up',
-              location: 'New York, NY',
-              description: 'Package has been picked up by courier'
-            },
-            {
-              date: '2024-01-16 8:00 AM',
-              status: 'In Transit',
-              location: 'Chicago, IL',
-              description: 'Package is in transit to destination'
-            }
-          ]
-        });
-      } else {
-        setError('Package not found');
-        setPackageData(null);
-      }
+      const response = await api.get(`/tracking/track/${trackingNumber.toUpperCase()}`);
+      setPackageData(response.data);
     } catch (err: any) {
       setError(err.response?.data?.error || 'Package not found');
       setPackageData(null);

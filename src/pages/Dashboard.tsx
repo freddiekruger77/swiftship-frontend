@@ -22,6 +22,7 @@ import {
   Warning as WarningIcon,
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
+import api from '../utils/api';
 
 interface DashboardStats {
   totalPackages: number;
@@ -53,34 +54,13 @@ const Dashboard: React.FC = () => {
 
   const fetchDashboardData = async () => {
     try {
-      // Mock data for now - in a real app this would come from APIs
-      setStats({
-        totalPackages: 24,
-        overduePackages: 3,
-        statusBreakdown: {
-          'pending': 5,
-          'in-transit': 12,
-          'delivered': 7,
-          'cancelled': 0
-        }
-      });
-
-      setRecentPackages([
-        {
-          id: '1',
-          trackingNumber: 'SS123456789',
-          status: 'in-transit',
-          destination: 'Los Angeles, CA',
-          createdAt: '2024-01-15'
-        },
-        {
-          id: '2',
-          trackingNumber: 'SS987654321',
-          status: 'delivered',
-          destination: 'Miami, FL',
-          createdAt: '2024-01-10'
-        }
+      const [statsResponse, packagesResponse] = await Promise.all([
+        api.get('/packages/dashboard/stats'),
+        api.get('/packages?page=1&limit=5')
       ]);
+
+      setStats(statsResponse.data);
+      setRecentPackages(packagesResponse.data.packages);
     } catch (error) {
       console.error('Failed to fetch dashboard data:', error);
     } finally {
