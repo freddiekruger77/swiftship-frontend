@@ -1,6 +1,6 @@
 # SwiftShip Frontend
 
-A modern React-based shipping management application built with Material-UI and TypeScript, designed for deployment on GitHub Pages.
+A modern React-based shipping management application built with Material-UI and TypeScript, designed for deployment on Render.
 
 ## Features
 
@@ -9,14 +9,14 @@ A modern React-based shipping management application built with Material-UI and 
 - **Real-time Tracking**: Track packages with detailed history
 - **Responsive Design**: Works on desktop and mobile devices
 - **Modern UI**: Built with Material-UI components
-- **GitHub Pages Compatible**: Optimized for static hosting
+- **Render Compatible**: Optimized for Render static hosting
 
 ## Tech Stack
 
 - **React 18** - Modern React with hooks
 - **TypeScript** - Type-safe JavaScript
 - **Material-UI (MUI)** - React component library
-- **React Router** - Client-side routing with HashRouter
+- **React Router** - Client-side routing with BrowserRouter
 - **Vite** - Fast build tool and dev server
 - **Axios** - HTTP client for API calls
 
@@ -74,29 +74,37 @@ The frontend expects the following backend endpoints:
 - `POST /packages` - Create new package
 - `GET /tracking/track/:trackingNumber` - Track package by number
 
-## Deployment to GitHub Pages
+## Deployment to Render
 
-This project is configured for automatic deployment to GitHub Pages using GitHub Actions.
+This project is configured for deployment to Render using static site hosting.
 
-### Key Features for GitHub Pages
+### Key Features for Render
 
-- **HashRouter**: Uses hash-based routing for compatibility with static hosting
-- **404.html Redirect**: Handles SPA routing by redirecting unknown routes to index.html
-- **Base Path Configuration**: Correctly configured for project repositories
+- **BrowserRouter**: Uses standard browser routing (Render supports proper routing)
 - **Static Asset Optimization**: Optimized build for fast loading
+- **Environment Variables**: Proper API URL configuration for production
+- **Render Configuration**: Includes `render.yaml` for easy deployment
 
 ### Setup Steps
 
-1. **Enable GitHub Pages**:
-   - Go to your repository Settings → Pages
-   - Select "GitHub Actions" as the source
+1. **Connect to Render**:
+   - Go to [render.com](https://render.com) and sign up/login
+   - Click "New +" → "Static Site"
+   - Connect your GitHub repository
 
-2. **Deploy**:
-   - Push to the `main` branch or create a pull request
-   - GitHub Actions will automatically build and deploy the site
+2. **Configure Deployment**:
+   - **Name**: `swiftship-frontend` (or your preferred name)
+   - **Branch**: `main`
+   - **Build Command**: `npm run build`
+   - **Publish Directory**: `dist`
+   - **Environment Variables**: Add `VITE_API_URL=https://swiftship-backend-c5iz.onrender.com`
 
-3. **Access your site**:
-   - The site will be available at `https://<username>.github.io/swiftship-frontend/`
+3. **Deploy**:
+   - Click "Create Static Site"
+   - Render will automatically build and deploy your site
+
+4. **Access your site**:
+   - The site will be available at `https://your-site-name.onrender.com`
 
 ### Manual Build
 
@@ -112,10 +120,9 @@ The built files will be in the `dist/` directory.
 
 ```
 swiftship-frontend/
-├── .github/workflows/deploy.yml    # GitHub Actions deployment
-├── public/
-│   ├── 404.html                   # SPA routing fallback
-│   └── .nojekyll                  # Disable Jekyll processing
+├── .env                           # Environment variables
+├── render.yaml                    # Render deployment configuration
+├── public/                        # Static assets
 ├── src/
 │   ├── components/
 │   │   └── Layout.tsx             # Main app layout with navigation
@@ -131,45 +138,31 @@ swiftship-frontend/
 │   │   └── AuthContext.tsx        # Authentication context
 │   ├── utils/
 │   │   └── api.ts                 # API configuration and axios instance
-│   ├── App.tsx                    # Main app component with HashRouter
+│   ├── App.tsx                    # Main app component with BrowserRouter
 │   ├── main.tsx                   # React app entry point
 │   └── index.css                  # Global styles
-├── index.html                     # Main HTML file with base tag
+├── index.html                     # Main HTML file
 ├── package.json                   # Dependencies and scripts
-├── vite.config.ts                 # Build configuration with base path
+├── vite.config.ts                 # Build configuration
 ├── tsconfig.json                  # TypeScript configuration
 └── README.md                      # Project documentation
 ```
 
 ## Configuration
 
-### GitHub Pages Base Path
+### Environment Variables
 
-The app is configured with base path `/swiftship-frontend/` for GitHub Pages project repositories. If you're deploying to a different path, update:
+The app uses environment variables for configuration:
 
-1. **vite.config.ts**:
-```typescript
-export default defineConfig({
-  base: process.env.NODE_ENV === 'production' ? '/your-repo-name/' : '/',
-  // ...
-})
-```
-
-2. **index.html**:
-```html
-<base href="/your-repo-name/" />
-```
-
-3. **public/404.html**:
-```javascript
-var base = '/your-repo-name/';
-```
+- **VITE_API_URL**: Your backend API URL (set in Render dashboard)
+- **Development**: Uses Vite proxy to avoid CORS issues
+- **Production**: Direct API calls to your backend URL
 
 ### Development vs Production
 
 - **Development**: Uses Vite proxy to avoid CORS issues
-- **Production**: Direct API calls to your backend URL with correct base path
-- **GitHub Pages**: Fully compatible with HashRouter and SPA routing
+- **Production**: Direct API calls to your backend URL
+- **Render**: Fully compatible with BrowserRouter and proper routing
 
 ## Development
 
@@ -189,20 +182,20 @@ This project uses:
 
 ## Troubleshooting
 
-### MIME Type Errors
+### Build Issues
 
-If you encounter "disallowed MIME type" errors:
+If you encounter build issues on Render:
 
-1. Ensure your repository name matches the base path in `vite.config.ts`
-2. Check that GitHub Pages is enabled and set to deploy from GitHub Actions
-3. Verify the `public/404.html` file exists and is properly configured
-4. Make sure the `index.html` has the correct `<base>` tag
+1. Ensure all dependencies are in `package.json`
+2. Check that the build command `npm run build` works locally
+3. Verify the `render.yaml` configuration is correct
+4. Check Render logs for specific error messages
 
 ### Routing Issues
 
-- The app uses HashRouter (`#` in URLs) for GitHub Pages compatibility
-- All routes should work correctly with hash-based routing
-- Direct links to routes (without `#`) will be handled by the 404.html redirect
+- The app uses BrowserRouter for proper routing
+- All routes should work correctly with standard browser routing
+- Direct links to routes work properly on Render
 
 ## Contributing
 
