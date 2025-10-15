@@ -15,9 +15,6 @@ import {
 import {
   TrackChanges as TrackIcon,
   LocationOn as LocationIcon,
-  Schedule as ScheduleIcon,
-  CheckCircle as CheckCircleIcon,
-  Warning as WarningIcon,
 } from '@mui/icons-material';
 import api from '../utils/api';
 
@@ -100,7 +97,7 @@ const Tracking: React.FC = () => {
               <Button
                 fullWidth
                 variant="contained"
-                size="large"
+                size="medium"
                 startIcon={<TrackIcon />}
                 onClick={handleTrack}
                 disabled={loading}
@@ -128,7 +125,7 @@ const Tracking: React.FC = () => {
               <Chip
                 label={packageData.status.replace('-', ' ')}
                 color={getStatusColor(packageData.status)}
-                size="large"
+                size="medium"
               />
             </Box>
 

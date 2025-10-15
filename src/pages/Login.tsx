@@ -42,7 +42,7 @@ const Login: React.FC = () => {
     const result = await login(formData.email, formData.password);
 
     if (!result.success) {
-      setError(result.error);
+      setError(result.error || 'Login failed');
     }
 
     setLoading(false);

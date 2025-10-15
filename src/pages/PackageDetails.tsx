@@ -129,7 +129,7 @@ const PackageDetails: React.FC = () => {
               <Chip
                 label={packageDetails.status.replace('-', ' ')}
                 color={getStatusColor(packageDetails.status)}
-                size="large"
+                size="medium"
               />
             </Box>
 

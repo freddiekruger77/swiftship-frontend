@@ -7,7 +7,6 @@ import {
   TextField,
   Button,
   Grid,
-  MenuItem,
   Alert,
 } from '@mui/material';
 import { ArrowBack as BackIcon, Save as SaveIcon } from '@mui/icons-material';
@@ -198,14 +197,14 @@ const CreatePackage: React.FC = () => {
                   type="submit"
                   variant="contained"
                   startIcon={<SaveIcon />}
-                  size="large"
+                  size="medium"
                   disabled={loading}
                 >
                   {loading ? 'Creating...' : 'Create Package'}
                 </Button>
                 <Button
                   variant="outlined"
-                  size="large"
+                  size="medium"
                   onClick={() => navigate('/packages')}
                 >
                   Cancel

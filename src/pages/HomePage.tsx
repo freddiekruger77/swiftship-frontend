@@ -8,7 +8,6 @@ import {
   Grid,
   Card,
   CardContent,
-  CardMedia,
   TextField,
   Paper,
   List,
@@ -18,7 +17,6 @@ import {
 } from '@mui/material';
 import {
   TrackChanges as TrackIcon,
-  LocalShipping as ShippingIcon,
   Speed as SpeedIcon,
   Security as SecurityIcon,
   Support as SupportIcon,
@@ -85,7 +83,7 @@ const HomePage: React.FC = () => {
         </Typography>
         <Button
           variant="contained"
-          size="large"
+          size="medium"
           sx={{ bgcolor: 'white', color: 'primary.main', mr: 2 }}
           onClick={() => navigate('/track')}
         >
@@ -93,7 +91,7 @@ const HomePage: React.FC = () => {
         </Button>
         <Button
           variant="outlined"
-          size="large"
+          size="medium"
           sx={{ color: 'white', borderColor: 'white' }}
           onClick={() => navigate('/packages')}
         >
