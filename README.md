@@ -9,13 +9,14 @@ A modern React-based shipping management application built with Material-UI and 
 - **Real-time Tracking**: Track packages with detailed history
 - **Responsive Design**: Works on desktop and mobile devices
 - **Modern UI**: Built with Material-UI components
+- **GitHub Pages Compatible**: Optimized for static hosting
 
 ## Tech Stack
 
 - **React 18** - Modern React with hooks
 - **TypeScript** - Type-safe JavaScript
 - **Material-UI (MUI)** - React component library
-- **React Router** - Client-side routing
+- **React Router** - Client-side routing with HashRouter
 - **Vite** - Fast build tool and dev server
 - **Axios** - HTTP client for API calls
 
@@ -77,6 +78,13 @@ The frontend expects the following backend endpoints:
 
 This project is configured for automatic deployment to GitHub Pages using GitHub Actions.
 
+### Key Features for GitHub Pages
+
+- **HashRouter**: Uses hash-based routing for compatibility with static hosting
+- **404.html Redirect**: Handles SPA routing by redirecting unknown routes to index.html
+- **Base Path Configuration**: Correctly configured for project repositories
+- **Static Asset Optimization**: Optimized build for fast loading
+
 ### Setup Steps
 
 1. **Enable GitHub Pages**:
@@ -88,7 +96,7 @@ This project is configured for automatic deployment to GitHub Pages using GitHub
    - GitHub Actions will automatically build and deploy the site
 
 3. **Access your site**:
-   - The site will be available at `https://<username>.github.io/<repository-name>/`
+   - The site will be available at `https://<username>.github.io/swiftship-frontend/`
 
 ### Manual Build
 
@@ -103,38 +111,65 @@ The built files will be in the `dist/` directory.
 ## Project Structure
 
 ```
-src/
-├── components/          # Reusable UI components
-│   └── Layout.tsx      # Main app layout with navigation
-├── pages/              # Page components
-│   ├── Dashboard.tsx   # Main dashboard
-│   ├── Login.tsx       # Authentication page
-│   ├── HomePage.tsx    # Landing page
-│   ├── Tracking.tsx    # Package tracking page
-│   ├── Packages.tsx    # Package list page
-│   ├── PackageDetails.tsx # Individual package view
-│   └── CreatePackage.tsx  # Create new package form
-├── context/            # React context providers
-│   └── AuthContext.tsx # Authentication context
-├── utils/              # Utility functions
-│   └── api.ts          # API configuration and axios instance
-├── App.tsx             # Main app component
-├── main.tsx            # React app entry point
-└── index.css           # Global styles
+swiftship-frontend/
+├── .github/workflows/deploy.yml    # GitHub Actions deployment
+├── public/
+│   ├── 404.html                   # SPA routing fallback
+│   └── .nojekyll                  # Disable Jekyll processing
+├── src/
+│   ├── components/
+│   │   └── Layout.tsx             # Main app layout with navigation
+│   ├── pages/                     # Page components
+│   │   ├── Dashboard.tsx          # Main dashboard
+│   │   ├── Login.tsx              # Authentication page
+│   │   ├── HomePage.tsx           # Landing page
+│   │   ├── Tracking.tsx           # Package tracking page
+│   │   ├── Packages.tsx           # Package list page
+│   │   ├── PackageDetails.tsx     # Individual package view
+│   │   └── CreatePackage.tsx      # Create new package form
+│   ├── context/
+│   │   └── AuthContext.tsx        # Authentication context
+│   ├── utils/
+│   │   └── api.ts                 # API configuration and axios instance
+│   ├── App.tsx                    # Main app component with HashRouter
+│   ├── main.tsx                   # React app entry point
+│   └── index.css                  # Global styles
+├── index.html                     # Main HTML file with base tag
+├── package.json                   # Dependencies and scripts
+├── vite.config.ts                 # Build configuration with base path
+├── tsconfig.json                  # TypeScript configuration
+└── README.md                      # Project documentation
 ```
 
 ## Configuration
 
-The app is configured to work with GitHub Pages' subdirectory structure. The `vite.config.ts` handles the base path automatically.
+### GitHub Pages Base Path
 
-For custom deployment paths, update the `base` property in `vite.config.ts`:
+The app is configured with base path `/swiftship-frontend/` for GitHub Pages project repositories. If you're deploying to a different path, update:
 
+1. **vite.config.ts**:
 ```typescript
 export default defineConfig({
   base: process.env.NODE_ENV === 'production' ? '/your-repo-name/' : '/',
   // ...
 })
 ```
+
+2. **index.html**:
+```html
+<base href="/your-repo-name/" />
+```
+
+3. **public/404.html**:
+```javascript
+var base = '/your-repo-name/';
+```
+
+### Development vs Production
+
+- **Development**: Uses Vite proxy to avoid CORS issues
+- **Production**: Direct API calls to your backend URL with correct base path
+- **GitHub Pages**: Fully compatible with HashRouter and SPA routing
 
 ## Development
 
@@ -151,6 +186,23 @@ This project uses:
 - TypeScript for type safety
 - ESLint for code linting
 - Material-UI's styling system
+
+## Troubleshooting
+
+### MIME Type Errors
+
+If you encounter "disallowed MIME type" errors:
+
+1. Ensure your repository name matches the base path in `vite.config.ts`
+2. Check that GitHub Pages is enabled and set to deploy from GitHub Actions
+3. Verify the `public/404.html` file exists and is properly configured
+4. Make sure the `index.html` has the correct `<base>` tag
+
+### Routing Issues
+
+- The app uses HashRouter (`#` in URLs) for GitHub Pages compatibility
+- All routes should work correctly with hash-based routing
+- Direct links to routes (without `#`) will be handled by the 404.html redirect
 
 ## Contributing
 
