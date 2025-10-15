@@ -31,9 +31,9 @@ api.interceptors.response.use(
   },
   (error: AxiosError) => {
     if (error.response?.status === 401) {
-      // Token expired or invalid, clear storage and redirect to login
+      // Token expired or invalid, clear storage and redirect to home
       localStorage.removeItem('token');
-      window.location.href = '/login';
+      window.location.href = '/';
     }
     return Promise.reject(error);
   }

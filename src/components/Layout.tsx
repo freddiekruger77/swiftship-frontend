@@ -42,27 +42,11 @@ const Layout: React.FC<LayoutProps> = (props) => {
       <Toolbar />
       <List>
         <ListItem disablePadding>
-          <ListItemButton component="a" href="/home">
+          <ListItemButton component="a" href="/">
             <ListItemIcon>
               <DashboardIcon />
             </ListItemIcon>
             <ListItemText primary="Home" />
-          </ListItemButton>
-        </ListItem>
-        <ListItem disablePadding>
-          <ListItemButton component="a" href="/packages">
-            <ListItemIcon>
-              <ShippingIcon />
-            </ListItemIcon>
-            <ListItemText primary="Packages" />
-          </ListItemButton>
-        </ListItem>
-        <ListItem disablePadding>
-          <ListItemButton component="a" href="/packages/create">
-            <ListItemIcon>
-              <AddIcon />
-            </ListItemIcon>
-            <ListItemText primary="Create Package" />
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding>
@@ -71,6 +55,22 @@ const Layout: React.FC<LayoutProps> = (props) => {
               <TrackIcon />
             </ListItemIcon>
             <ListItemText primary="Track Package" />
+          </ListItemButton>
+        </ListItem>
+        <ListItem disablePadding>
+          <ListItemButton component="a" href="/admin">
+            <ListItemIcon>
+              <ShippingIcon />
+            </ListItemIcon>
+            <ListItemText primary="Admin Dashboard" />
+          </ListItemButton>
+        </ListItem>
+        <ListItem disablePadding>
+          <ListItemButton component="a" href="/admin/packages">
+            <ListItemIcon>
+              <AddIcon />
+            </ListItemIcon>
+            <ListItemText primary="Manage Packages" />
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding>

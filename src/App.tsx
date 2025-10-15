@@ -47,7 +47,8 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/track" element={<Tracking />} />
               <Route path="/home" element={<HomePage />} />
-              <Route path="/" element={
+              <Route path="/" element={<HomePage />} />
+              <Route path="/admin" element={
                 <ProtectedRoute>
                   <Layout />
                 </ProtectedRoute>
