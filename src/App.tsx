@@ -2,37 +2,6 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import { Box } from '@mui/material';
-
-// Components
-import Login from './pages/Login';
-import Dashboard from './pages/Dashboard';
-import Packages from './pages/Packages';
-import PackageDetails from './pages/PackageDetails';
-import CreatePackage from './pages/CreatePackage';
-import Tracking from './pages/Tracking';
-import HomePage from './pages/HomePage';
-import Layout from './components/Layout';
-
-// Context
-import { AuthProvider, useAuth } from './context/AuthContext';
-
-// Create theme
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: '#1976d2',
-    },
-    secondary: {
-      main: '#dc004e',
-    },
-  },
-});
-
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
 import { Box, CircularProgress, Typography, Alert } from '@mui/material';
 
 // Components
