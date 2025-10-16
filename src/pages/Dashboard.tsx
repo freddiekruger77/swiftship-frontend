@@ -55,8 +55,8 @@ const Dashboard: React.FC = () => {
   const fetchDashboardData = async () => {
     try {
       const [statsResponse, packagesResponse] = await Promise.all([
-        api.get('/packages/dashboard/stats'),
-        api.get('/packages?page=1&limit=5')
+        api.get('/api/packages/dashboard/stats'),
+        api.get('/api/packages?page=1&limit=5')
       ]);
 
       setStats(statsResponse.data);

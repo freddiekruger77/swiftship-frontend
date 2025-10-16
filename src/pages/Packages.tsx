@@ -38,7 +38,7 @@ const Packages: React.FC = () => {
 
   const fetchPackages = async () => {
     try {
-      const response = await api.get('/packages');
+      const response = await api.get('/api/packages');
       setPackages(response.data.packages || response.data);
     } catch (error: any) {
       console.error('Failed to fetch packages:', error);

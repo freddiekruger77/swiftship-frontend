@@ -62,7 +62,7 @@ const CreatePackage: React.FC = () => {
     if (validateForm()) {
       setLoading(true);
       try {
-        await api.post('/packages', formData);
+        await api.post('/api/packages', formData);
         setSuccess(true);
         setTimeout(() => {
           navigate('/packages');

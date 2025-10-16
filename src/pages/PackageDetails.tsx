@@ -52,7 +52,7 @@ const PackageDetails: React.FC = () => {
 
   const fetchPackageDetails = async () => {
     try {
-      const response = await api.get(`/packages/${id}`);
+      const response = await api.get(`/api/packages/${id}`);
       setPackageDetails(response.data);
     } catch (error: any) {
       console.error('Failed to fetch package details:', error);
