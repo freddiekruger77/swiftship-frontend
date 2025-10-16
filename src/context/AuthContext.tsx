@@ -11,6 +11,7 @@ interface AuthContextType {
   admin: Admin | null;
   isAuthenticated: boolean;
   loading: boolean;
+  error: string | null;
   login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
   logout: () => Promise<void>;
 }
@@ -33,6 +34,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [admin, setAdmin] = useState<Admin | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   // Set up axios defaults
   useEffect(() => {
@@ -46,6 +48,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   // Login function
   const login = async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
     try {
+      setError(null);
       const response = await api.post('/auth/login', { email, password });
       const { token, admin: adminData } = response.data;
 
@@ -57,9 +60,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
       return { success: true };
     } catch (error: any) {
+      const errorMessage = error.response?.data?.error || error.message || 'Login failed';
+      setError(errorMessage);
       return {
         success: false,
-        error: error.response?.data?.error || 'Login failed'
+        error: errorMessage
       };
     }
   };
@@ -70,11 +75,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       await api.post('/auth/logout');
     } catch (error) {
       console.error('Logout error:', error);
+      // Continue with logout even if API call fails
     } finally {
       localStorage.removeItem('token');
       delete api.defaults.headers.common['Authorization'];
       setAdmin(null);
       setIsAuthenticated(false);
+      setError(null);
     }
   };
 
@@ -87,10 +94,19 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           const response = await api.get('/auth/profile');
           setAdmin(response.data.admin);
           setIsAuthenticated(true);
-        } catch (error) {
+          setError(null);
+        } catch (error: any) {
           console.error('Auth check failed:', error);
+          // Clear invalid token
           localStorage.removeItem('token');
           delete api.defaults.headers.common['Authorization'];
+          setAdmin(null);
+          setIsAuthenticated(false);
+
+          // Only set error if it's not a network issue
+          if (error.code !== 'NETWORK_ERROR' && error.response?.status !== 401) {
+            setError('Authentication check failed. Please try logging in again.');
+          }
         }
       }
       setLoading(false);
@@ -103,6 +119,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     admin,
     isAuthenticated,
     loading,
+    error,
     login,
     logout
   };

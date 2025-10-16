@@ -30,11 +30,19 @@ api.interceptors.response.use(
     return response;
   },
   (error: AxiosError) => {
-    if (error.response?.status === 401) {
+    // Add custom error code for network errors
+    if (!error.response) {
+      const networkError = new Error('Network error - please check your internet connection');
+      (networkError as any).code = 'NETWORK_ERROR';
+      return Promise.reject(networkError);
+    }
+
+    if (error.response.status === 401) {
       // Token expired or invalid, clear storage and redirect to home
       localStorage.removeItem('token');
       window.location.href = '/';
     }
+
     return Promise.reject(error);
   }
 );
