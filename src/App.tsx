@@ -48,6 +48,8 @@ function App() {
               <Route path="/track" element={<Tracking />} />
               <Route path="/home" element={<HomePage />} />
               <Route path="/" element={<HomePage />} />
+
+              {/* Admin Routes - Protected */}
               <Route path="/admin" element={
                 <ProtectedRoute>
                   <Layout />
@@ -58,6 +60,9 @@ function App() {
                 <Route path="packages/create" element={<CreatePackage />} />
                 <Route path="packages/:id" element={<PackageDetails />} />
               </Route>
+
+              {/* Catch all route - redirect to home */}
+              <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </Box>
         </Router>
