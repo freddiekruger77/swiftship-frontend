@@ -14,8 +14,7 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
-  Avatar,
-  Divider
+  Avatar
 } from '@mui/material';
 import {
   TrackChanges as TrackIcon,
@@ -23,8 +22,6 @@ import {
   Security as SecurityIcon,
   Support as SupportIcon,
   CheckCircle as CheckIcon,
-  LocalShipping as ShippingIcon,
-  Timeline as TimelineIcon,
   Star as StarIcon
 } from '@mui/icons-material';
 
