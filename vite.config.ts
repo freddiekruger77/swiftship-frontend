@@ -12,7 +12,10 @@ export default defineConfig({
       output: {
         manualChunks: undefined,
       }
-    }
+    },
+    // Suppress SES warnings and optimize build
+    minify: 'esbuild',
+    target: 'esnext'
   },
   server: {
     port: 3000,
@@ -25,5 +28,16 @@ export default defineConfig({
         rewrite: (path) => path.replace(/^\/api/, '')
       }
     }
+  },
+  // Suppress CSS warnings
+  css: {
+    devSourcemap: false,
+    postcss: {
+      plugins: []
+    }
+  },
+  // Optimize dependencies
+  optimizeDeps: {
+    include: ['react', 'react-dom', '@mui/material', '@emotion/react', '@emotion/styled']
   }
 })
