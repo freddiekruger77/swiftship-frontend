@@ -1,4 +1,4 @@
-import axios, { AxiosResponse, InternalAxiosRequestConfig, AxiosError } from 'axios';
+import axios, { AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 
 // Create axios instance with default configuration
 const api = axios.create({
@@ -29,7 +29,7 @@ api.interceptors.response.use(
   (response: AxiosResponse) => {
     return response;
   },
-  (error: AxiosError) => {
+  (error) => {
     // Add custom error code for network errors
     if (!error.response) {
       const networkError = new Error('Network error - please check your internet connection');

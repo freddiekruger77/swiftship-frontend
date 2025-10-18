@@ -59,8 +59,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setIsAuthenticated(true);
 
       return { success: true };
-    } catch (error: any) {
-      const errorMessage = error.response?.data?.error || error.message || 'Login failed';
+    } catch (error) {
+      const errorMessage = error && typeof error === 'object' && 'response' in error && error.response && typeof error.response === 'object' && 'data' in error.response && error.response.data && typeof error.response.data === 'object' && 'error' in error.response.data ? error.response.data.error : (error && typeof error === 'object' && 'message' in error ? error.message : 'Login failed');
       setError(errorMessage);
       return {
         success: false,
@@ -95,7 +95,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           setAdmin(response.data.admin);
           setIsAuthenticated(true);
           setError(null);
-        } catch (error: any) {
+        } catch (error) {
           console.error('Auth check failed:', error);
           // Clear invalid token
           localStorage.removeItem('token');
@@ -104,7 +104,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           setIsAuthenticated(false);
 
           // Only set error if it's not a network issue
-          if (error.code !== 'NETWORK_ERROR' && error.response?.status !== 401) {
+          if (error && typeof error === 'object' && 'code' in error && error.code !== 'NETWORK_ERROR' && error && typeof error === 'object' && 'response' in error && error.response && typeof error.response === 'object' && 'status' in error.response && error.response.status !== 401) {
             setError('Authentication check failed. Please try logging in again.');
           }
         }

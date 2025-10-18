@@ -6,6 +6,7 @@ export default defineConfig({
   plugins: [react()],
   define: {
     global: 'globalThis',
+    'process.env': {},
   },
   build: {
     outDir: 'dist',
@@ -14,11 +15,19 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: undefined,
+      },
+      external: (id) => {
+        // Exclude SES-related modules from bundling if they cause issues
+        return id.includes('lockdown') || id.includes('ses')
       }
     },
     // Suppress SES warnings and optimize build
     minify: 'esbuild',
-    target: 'esnext'
+    target: 'esnext',
+    // Add polyfills for better compatibility
+    commonjsOptions: {
+      transformMixedEsModules: true,
+    }
   },
   server: {
     port: 3000,
@@ -41,6 +50,14 @@ export default defineConfig({
   },
   // Optimize dependencies
   optimizeDeps: {
-    include: ['react', 'react-dom', '@mui/material', '@emotion/react', '@emotion/styled']
+    include: ['react', 'react-dom', '@mui/material', '@emotion/react', '@emotion/styled'],
+    exclude: ['lockdown', 'ses']
+  },
+  // Enable legacy support for better browser compatibility
+  esbuild: {
+    target: 'esnext',
+    supported: {
+      'destructuring': true
+    }
   }
 })

@@ -65,8 +65,9 @@ const AuthError: React.FC<{ error: string }> = ({ error }) => (
 );
 
 // Protected Route component
-const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const ProtectedRoute: React.FC<{ children: React.ReactNode }> = (props) => {
   const { isAuthenticated, loading, error } = useAuth();
+  const { children } = props;
 
   if (loading) {
     return <LoadingSpinner />;
