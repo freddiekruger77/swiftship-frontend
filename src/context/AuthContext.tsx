@@ -60,7 +60,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
       return { success: true };
     } catch (error) {
-      const errorMessage = error && typeof error === 'object' && 'response' in error && error.response && typeof error.response === 'object' && 'data' in error.response && error.response.data && typeof error.response.data === 'object' && 'error' in error.response.data ? error.response.data.error : (error && typeof error === 'object' && 'message' in error ? error.message : 'Login failed');
+      let errorMessage = 'Login failed';
+
+      if (error && typeof error === 'object') {
+        if ('response' in error && error.response && typeof error.response === 'object' && 'data' in error.response && error.response.data && typeof error.response.data === 'object' && 'error' in error.response.data && typeof error.response.data.error === 'string') {
+          errorMessage = error.response.data.error;
+        } else if ('message' in error && typeof error.message === 'string') {
+          errorMessage = error.message;
+        }
+      }
+
       setError(errorMessage);
       return {
         success: false,
@@ -104,8 +113,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           setIsAuthenticated(false);
 
           // Only set error if it's not a network issue
-          if (error && typeof error === 'object' && 'code' in error && error.code !== 'NETWORK_ERROR' && error && typeof error === 'object' && 'response' in error && error.response && typeof error.response === 'object' && 'status' in error.response && error.response.status !== 401) {
-            setError('Authentication check failed. Please try logging in again.');
+          if (error && typeof error === 'object') {
+            const isNetworkError = 'code' in error && error.code === 'NETWORK_ERROR';
+            const isUnauthorized = 'response' in error && error.response && typeof error.response === 'object' && 'status' in error.response && error.response.status === 401;
+
+            if (!isNetworkError && !isUnauthorized) {
+              setError('Authentication check failed. Please try logging in again.');
+            }
           }
         }
       }
