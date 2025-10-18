@@ -1,5 +1,5 @@
 import React from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import {
   AppBar,
   Box,
@@ -32,9 +32,16 @@ interface LayoutProps {
 const Layout: React.FC<LayoutProps> = (props) => {
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
+  };
+
+  const handleNavigation = (path: string) => {
+    navigate(path);
+    setMobileOpen(false);
   };
 
   const drawer = (
@@ -42,7 +49,7 @@ const Layout: React.FC<LayoutProps> = (props) => {
       <Toolbar />
       <List>
         <ListItem disablePadding>
-          <ListItemButton component="a" href="/">
+          <ListItemButton selected={location.pathname === '/'} onClick={() => handleNavigation('/')}>
             <ListItemIcon>
               <DashboardIcon />
             </ListItemIcon>
@@ -50,7 +57,7 @@ const Layout: React.FC<LayoutProps> = (props) => {
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding>
-          <ListItemButton component="a" href="/track">
+          <ListItemButton selected={location.pathname === '/track'} onClick={() => handleNavigation('/track')}>
             <ListItemIcon>
               <TrackIcon />
             </ListItemIcon>
@@ -58,7 +65,7 @@ const Layout: React.FC<LayoutProps> = (props) => {
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding>
-          <ListItemButton component="a" href="/admin">
+          <ListItemButton selected={location.pathname.startsWith('/admin')} onClick={() => handleNavigation('/admin')}>
             <ListItemIcon>
               <ShippingIcon />
             </ListItemIcon>
@@ -66,7 +73,7 @@ const Layout: React.FC<LayoutProps> = (props) => {
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding>
-          <ListItemButton component="a" href="/admin/packages">
+          <ListItemButton selected={location.pathname === '/admin/packages'} onClick={() => handleNavigation('/admin/packages')}>
             <ListItemIcon>
               <AddIcon />
             </ListItemIcon>
@@ -74,7 +81,7 @@ const Layout: React.FC<LayoutProps> = (props) => {
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding>
-          <ListItemButton component="a" href="/login">
+          <ListItemButton onClick={() => handleNavigation('/login')}>
             <ListItemIcon>
               <LogoutIcon />
             </ListItemIcon>

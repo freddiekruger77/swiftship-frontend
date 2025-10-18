@@ -87,29 +87,27 @@ function App() {
       <CssBaseline />
       <AuthProvider>
         <Router>
-          <Box sx={{ display: 'flex' }}>
-            <Routes>
-              <Route path="/login" element={<Login />} />
-              <Route path="/track" element={<Tracking />} />
-              <Route path="/home" element={<HomePage />} />
-              <Route path="/" element={<HomePage />} />
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/track" element={<Tracking />} />
+            <Route path="/home" element={<HomePage />} />
+            <Route path="/" element={<HomePage />} />
 
-              {/* Admin Routes - Protected */}
-              <Route path="/admin" element={
-                <ProtectedRoute>
-                  <Layout />
-                </ProtectedRoute>
-              }>
-                <Route index element={<Dashboard />} />
-                <Route path="packages" element={<Packages />} />
-                <Route path="packages/create" element={<CreatePackage />} />
-                <Route path="packages/:id" element={<PackageDetails />} />
-              </Route>
+            {/* Admin Routes - Protected */}
+            <Route path="/admin" element={
+              <ProtectedRoute>
+                <Layout />
+              </ProtectedRoute>
+            }>
+              <Route index element={<Dashboard />} />
+              <Route path="packages" element={<Packages />} />
+              <Route path="packages/create" element={<CreatePackage />} />
+              <Route path="packages/:id" element={<PackageDetails />} />
+            </Route>
 
-              {/* Catch all route - redirect to home */}
-              <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
-          </Box>
+            {/* Catch all route - redirect to home */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
         </Router>
       </AuthProvider>
     </ThemeProvider>
